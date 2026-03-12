@@ -1,0 +1,18 @@
+[package]
+name = "constant_time_eq"
+version = "0.4.2"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "Minimal constant-time equality comparison, vendored for PivLink to avoid edition2024 requirement."
+repository = "https://github.com/coral-xyz/pivlink"
+
+[lib]
+name = "constant_time_eq"
+path = "src/lib.rs"
+
+[features]
+# Match upstream interface: provide a `std` feature.
+# Our implementation is `no_std`-compatible; `std` is a no-op.
+default = ["std"]
+std = []
+

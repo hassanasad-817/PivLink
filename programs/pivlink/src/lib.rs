@@ -7,8 +7,7 @@ mod errors;
 use state::*;
 use errors::*;
 
-declare_id!("REPLACE_WITH_YOUR_PROGRAM_ID");
-
+declare_id!("2uM7hfyYjXFZA4m5t9KoNpcas2gKxLHDSs3NwCy3uMES");
 #[program]
 pub mod pivlink {
     use super::*;
@@ -20,13 +19,28 @@ pub mod pivlink {
         ctx: Context<Initialize>,
         invoice_id: [u8; 16],
         amount: u64,
+        client: Pubkey,
+        deadline: i64,
+        platform_fee_bps: u16,
     ) -> Result<()> {
         let escrow = &mut ctx.accounts.escrow;
 
+        require!(amount > 0, EscrowError::InvalidAmount);
+
+        let clock = Clock::get()?;
+        require!(
+            deadline > clock.unix_timestamp,
+            EscrowError::InvalidDeadline
+        );
+
         escrow.invoice_id = invoice_id;
         escrow.freelancer = ctx.accounts.freelancer.key();
+        escrow.client = client;
+        escrow.arbitrator = ctx.accounts.arbitrator.key();
         escrow.amount = amount;
+        escrow.platform_fee_bps = platform_fee_bps;
         escrow.state = EscrowState::AwaitingFunds;
+        escrow.deadline = deadline;
         escrow.bump = ctx.bumps.escrow;
 
         msg!("Escrow initialized for invoice: {:?}", invoice_id);
@@ -71,6 +85,13 @@ pub mod pivlink {
             EscrowError::InvalidState
         );
 
+        // Only the client associated with this escrow can release funds
+        require_keys_eq!(
+            ctx.accounts.client.key(),
+            escrow.client,
+            EscrowError::Unauthorized
+        );
+
         // Verify USDC mint matches
         require!(
             ctx.accounts.vault.mint == ctx.accounts.usdc_mint.key(),
@@ -78,8 +99,10 @@ pub mod pivlink {
         );
 
         let total_amount = escrow.amount;
-        let fee = total_amount / 100; // 1%
-        let payout = total_amount - fee;
+        let fee = ((total_amount as u128 * escrow.platform_fee_bps as u128) / 10_000) as u64;
+        let payout = total_amount
+            .checked_sub(fee)
+            .ok_or(EscrowError::InvalidAmount)?;
 
         msg!("Releasing funds. Total: {}, Fee: {}, Payout: {}", total_amount, fee, payout);
 
@@ -138,6 +161,9 @@ pub struct Initialize<'info> {
 
     pub usdc_mint: Account<'info, Mint>,
 
+    /// CHECK: Platform / arbitrator authority (stored in escrow)
+    pub arbitrator: AccountInfo<'info>,
+
     #[account(mut)]
     pub freelancer: Signer<'info>,
 
@@ -183,6 +209,9 @@ pub struct Release<'info> {
     /// CHECK: Freelancer account (for closing vault)
     #[account(mut)]
     pub freelancer: AccountInfo<'info>,
+
+    /// Client must sign to authorize release
+    pub client: Signer<'info>,
 
     pub token_program: Program<'info, Token>,
 }
