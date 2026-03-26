@@ -1,14 +1,15 @@
 [toolchain]
+anchor_version = "0.29.0"
 
 [features]
 resolution = true
 skip-lint = false
 
 [programs.devnet]
-pivlink = "2uM7hfyYjXFZA4m5t9KoNpcas2gKxLHDSs3NwCy3uMES"
+pivlink = "GQaYQd2gt61ppsgsMwJpCtgDP1f1oVYhfhxqcR485CFB"
 
 [programs.mainnet]
-pivlink = "2D5ngxXpkfVUPzz8bRgYoFKUvFqrxnZkbeigjuDgopmY"
+pivlink = "6mXYBxqAWSbJmUPCmGRLd1YNsmkh4e5WV5Mqs8MVi3N1"
 
 [registry]
 url = "https://api.apr.dev"

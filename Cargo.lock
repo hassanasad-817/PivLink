@@ -196,6 +196,10 @@ dependencies = [
  "anchor-derive-accounts",
  "anchor-derive-serde",
  "anchor-derive-space",
+<<<<<<< HEAD
+=======
+ "anchor-syn",
+>>>>>>> d27c860 (fix: support missing NEXT_PUBLIC_PRIVY_APP_ID and robust Solana wallet hook handling)
  "arrayref",
  "base64 0.13.1",
  "bincode",
@@ -715,6 +719,11 @@ dependencies = [
 [[package]]
 name = "constant_time_eq"
 version = "0.4.2"
+<<<<<<< HEAD
+=======
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3d52eff69cd5e647efe296129160853a42795992097e8af39800e1060caeea9b"
+>>>>>>> d27c860 (fix: support missing NEXT_PUBLIC_PRIVY_APP_ID and robust Solana wallet hook handling)
 
 [[package]]
 name = "cpufeatures"

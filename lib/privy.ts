@@ -1,15 +1,22 @@
 import { useWallets, usePrivy } from '@privy-io/react-auth';
 import { useWallets as useSolanaWallets } from '@privy-io/react-auth/solana';
 
+const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+
 /**
  * Get the user's Solana wallet address from Privy.
  * Uses Solana-specific useWallets first (returns ConnectedStandardSolanaWallet with .address), then falls back to main useWallets.
  */
 export function useSolanaAddress(): string | null {
-  const { wallets: solanaWallets, ready: solanaReady } = useSolanaWallets();
-  const { wallets: mainWallets } = useWallets();
+  if (!privyAppId) return null;
 
-  if (solanaReady && solanaWallets?.length > 0) return solanaWallets[0].address;
+  const solanaWalletsData = useSolanaWallets();
+  const mainWalletsData = useWallets();
+  const solanaWallets = solanaWalletsData?.wallets ?? [];
+  const solanaReady = solanaWalletsData?.ready ?? false;
+  const mainWallets = mainWalletsData?.wallets ?? [];
+
+  if (solanaReady && solanaWallets.length > 0) return solanaWallets[0].address;
 
   const solanaFromMain = mainWallets.find((w: { type?: string; chainId?: string; walletClientType?: string }) => {
     if ((w as { type?: string }).type === 'solana') return true;
@@ -25,6 +32,7 @@ export function useSolanaAddress(): string | null {
  * Check if user is authenticated
  */
 export function useIsAuthenticated(): boolean {
+  if (!privyAppId) return false;
   const { authenticated } = usePrivy();
   return authenticated;
 }
