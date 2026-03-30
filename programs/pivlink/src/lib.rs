@@ -7,7 +7,7 @@ mod errors;
 use state::*;
 use errors::*;
 
-declare_id!("GQaYQd2gt61ppsgsMwJpCtgDP1f1oVYhfhxqcR485CFB");
+declare_id!("CrkwL2RAcGE7e3zoeHa1b1pNLbXX9B6X1kTcMJTd27BJ");
 #[program]
 pub mod pivlink {
     use super::*;

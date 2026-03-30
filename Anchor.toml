@@ -1,12 +1,12 @@
 [toolchain]
-anchor_version = "0.29.0"
+anchor_version = "0.32.1"
 
 [features]
-resolution = true
+resolution = false
 skip-lint = false
 
 [programs.devnet]
-pivlink = "GQaYQd2gt61ppsgsMwJpCtgDP1f1oVYhfhxqcR485CFB"
+pivlink = "CrkwL2RAcGE7e3zoeHa1b1pNLbXX9B6X1kTcMJTd27BJ"
 
 [programs.mainnet]
 pivlink = "6mXYBxqAWSbJmUPCmGRLd1YNsmkh4e5WV5Mqs8MVi3N1"
