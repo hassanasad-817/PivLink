@@ -46,7 +46,20 @@ export async function GET(
       }
 
       const hotWallet = Keypair.fromSecretKey(bs58.decode(hotWalletPrivateKey));
-      const wallet = new anchor.Wallet(hotWallet);
+      
+      // Create a simple wallet object for Anchor provider
+      const wallet = {
+        publicKey: hotWallet.publicKey,
+        signTransaction: async (tx: any) => {
+          tx.sign(hotWallet);
+          return tx;
+        },
+        signAllTransactions: async (txs: any[]) => {
+          txs.forEach(tx => tx.sign(hotWallet));
+          return txs;
+        },
+      };
+      
       const provider = new anchor.AnchorProvider(connection, wallet, {
         commitment: 'confirmed',
       });
@@ -54,7 +67,7 @@ export async function GET(
       if (!idl) {
         throw new Error('PivLink program IDL not found on-chain. Run anchor idl init/upgrade.');
       }
-      const program = new anchor.Program(idl, programId, provider);
+      const program = new anchor.Program(idl, provider);
 
       const tx = await program.methods
         .depositNotification()
