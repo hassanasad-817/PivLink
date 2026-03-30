@@ -148,59 +148,6 @@ pub mod pivlink {
 
         // Now take a mutable borrow after the CPIs
         let escrow = &mut ctx.accounts.escrow;
-<<<<<<< HEAD
-
-        require!(
-            escrow.state == EscrowState::Funded,
-            EscrowError::InvalidState
-        );
-
-        // Only the client associated with this escrow can release funds
-        require_keys_eq!(
-            ctx.accounts.client.key(),
-            escrow.client,
-            EscrowError::Unauthorized
-        );
-
-        // Verify USDC mint matches
-        require!(
-            ctx.accounts.vault.mint == ctx.accounts.usdc_mint.key(),
-            EscrowError::InvalidMint
-        );
-
-        let total_amount = escrow.amount;
-        let fee = ((total_amount as u128 * escrow.platform_fee_bps as u128) / 10_000) as u64;
-        let payout = total_amount
-            .checked_sub(fee)
-            .ok_or(EscrowError::InvalidAmount)?;
-
-        msg!("Releasing funds. Total: {}, Fee: {}, Payout: {}", total_amount, fee, payout);
-
-        // Transfer fee to treasury
-        let fee_seeds: &[&[&[u8]]] = &[&[
-            b"pivlink",
-            &escrow.invoice_id,
-            &[ctx.bumps.escrow],
-        ]];
-
-        token::transfer(
-            ctx.accounts.transfer_fee_ctx().with_signer(fee_seeds),
-            fee,
-        )?;
-
-        // Transfer remainder to freelancer
-        token::transfer(
-            ctx.accounts.transfer_freelancer_ctx().with_signer(fee_seeds),
-            payout,
-        )?;
-
-        // Close vault
-        token::close_account(
-            ctx.accounts.close_ctx().with_signer(fee_seeds),
-        )?;
-
-=======
->>>>>>> d27c860 (fix: support missing NEXT_PUBLIC_PRIVY_APP_ID and robust Solana wallet hook handling)
         escrow.state = EscrowState::Released;
 
         msg!("Funds released successfully");
