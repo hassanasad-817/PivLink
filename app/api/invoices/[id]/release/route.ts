@@ -79,7 +79,18 @@ export async function POST(
     );
 
     // Call the on-chain release instruction via Anchor
-    const wallet = new anchor.Wallet(hotWallet);
+    const wallet = {
+      publicKey: hotWallet.publicKey,
+      signTransaction: async (tx: any) => {
+        tx.sign(hotWallet);
+        return tx;
+      },
+      signAllTransactions: async (txs: any[]) => {
+        txs.forEach(tx => tx.sign(hotWallet));
+        return txs;
+      },
+    };
+    
     const provider = new anchor.AnchorProvider(connection, wallet, {
       commitment: 'confirmed',
     });
@@ -87,7 +98,7 @@ export async function POST(
     if (!idl) {
       throw new Error('PivLink program IDL not found on-chain. Run anchor idl init/upgrade.');
     }
-    const program = new anchor.Program(idl, programId, provider);
+    const program = new anchor.Program(idl, provider);
 
     const tx = await program.methods
       .release()

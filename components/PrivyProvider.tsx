@@ -7,9 +7,10 @@ import { toSolanaWalletConnectors } from '@privy-io/react-auth/solana';
 
 export function PrivyProvider({ children }: { children: React.ReactNode }) {
   const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
-  
+
   if (!appId) {
     console.warn('NEXT_PUBLIC_PRIVY_APP_ID is not set. Privy will not work properly.');
+    return <>{children}</>;
   }
 
   const solanaRpcUrl = process.env.NEXT_PUBLIC_SOLANA_RPC_URL || 'https://api.devnet.solana.com';

@@ -10,4 +10,13 @@ pub enum EscrowError {
 
     #[msg("Invalid USDC mint address")]
     InvalidMint,
+
+    #[msg("Amount must be greater than zero")]
+    InvalidAmount,
+
+    #[msg("Deadline must be in the future")]
+    InvalidDeadline,
+
+    #[msg("Unauthorized")]
+    Unauthorized,
 }

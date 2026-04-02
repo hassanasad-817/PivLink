@@ -117,6 +117,7 @@ export async function POST(
 
     const payload = await createPostResponse({
       fields: {
+        type: 'transaction',
         transaction,
         message: `Pay ${invoice.amount_usdc} USDC to invoice ${invoiceId.slice(0, 8)}… (PivLink).`,
       },
