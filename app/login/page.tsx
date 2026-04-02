@@ -103,7 +103,7 @@ export default function LoginPage() {
           </div>
 
           <p className="text-center text-xs text-gray-400 mt-6">
-            By continuing, you agree to PivLink's Terms of Service.
+            By continuing, you agree to PivLink&apos;s Terms of Service.
           </p>
         </div>
 

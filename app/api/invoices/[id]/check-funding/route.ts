@@ -5,6 +5,20 @@ import bs58 from 'bs58';
 import { getInvoice, updateInvoiceStatus } from '@/lib/api/invoices';
 import { getEscrowPDA, getVaultPDA, uuidToBytes, getProgramId } from '@/lib/solana/utils';
 
+function keypairWallet(kp: Keypair) {
+  return {
+    publicKey: kp.publicKey,
+    signTransaction: async (tx: any) => {
+      tx.partialSign(kp);
+      return tx;
+    },
+    signAllTransactions: async (txs: any[]) => {
+      txs.forEach((t) => t.partialSign(kp));
+      return txs;
+    },
+  };
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -46,21 +60,8 @@ export async function GET(
       }
 
       const hotWallet = Keypair.fromSecretKey(bs58.decode(hotWalletPrivateKey));
-      
-      // Create a simple wallet object for Anchor provider
-      const wallet = {
-        publicKey: hotWallet.publicKey,
-        signTransaction: async (tx: any) => {
-          tx.sign(hotWallet);
-          return tx;
-        },
-        signAllTransactions: async (txs: any[]) => {
-          txs.forEach(tx => tx.sign(hotWallet));
-          return txs;
-        },
-      };
-      
-      const provider = new anchor.AnchorProvider(connection, wallet, {
+      const wallet = keypairWallet(hotWallet);
+      const provider = new anchor.AnchorProvider(connection, wallet as any, {
         commitment: 'confirmed',
       });
       const idl = await anchor.Program.fetchIdl(programId, provider);

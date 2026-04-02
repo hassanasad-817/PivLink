@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { useToast } from '@/components/Toast';
 
-export default function CreateInvoicePage() {
+function CreateInvoiceWithPrivy() {
   const { authenticated, ready, getAccessToken } = usePrivy();
   const walletAddress = useSolanaAddress();
   const isAuthenticated = authenticated && ready;
@@ -321,4 +321,33 @@ export default function CreateInvoicePage() {
       </div>
     </div>
   );
+}
+
+export default function CreateInvoicePage() {
+  if (!process.env.NEXT_PUBLIC_PRIVY_APP_ID) {
+    return (
+      <main className="min-h-screen flex flex-col bg-white">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center px-6">
+          <div className="max-w-lg w-full text-center rounded-3xl border border-amber-200 bg-amber-50 p-10">
+            <h1 className="text-2xl font-bold text-amber-900 mb-2">Privy not configured</h1>
+            <p className="text-sm text-amber-800 mb-6">
+              Set <code className="bg-amber-100 px-1 rounded">NEXT_PUBLIC_PRIVY_APP_ID</code> in your environment
+              variables and redeploy.
+            </p>
+            <a
+              className="text-blue-700 underline font-medium"
+              href="https://dashboard.privy.io/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Get Privy App ID
+            </a>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  return <CreateInvoiceWithPrivy />;
 }
