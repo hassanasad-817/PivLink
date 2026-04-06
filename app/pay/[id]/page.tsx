@@ -181,7 +181,7 @@ export default function PayInvoicePage() {
         <div className="flex-1 flex items-center justify-center px-6">
           <div className="text-center bg-white rounded-3xl border shadow-sm p-12 max-w-sm">
             <h1 className="text-2xl font-bold mb-2">Invoice Not Found</h1>
-            <p className="text-gray-400 text-sm mb-6">This invoice doesn't exist or has been removed.</p>
+            <p className="text-gray-400 text-sm mb-6">This invoice doesn&apos;t exist or has been removed.</p>
             <Link href="/" className="btn-primary text-sm py-2.5 inline-block">Back to Home</Link>
           </div>
         </div>

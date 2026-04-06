@@ -81,7 +81,7 @@ export default function ReleaseFundsPage() {
         <div className="flex-1 flex items-center justify-center px-6">
           <div className="text-center bg-white rounded-3xl border border-gray-100 shadow-sm p-12 max-w-sm">
             <h1 className="text-2xl font-bold mb-2 text-text">Invoice Not Found</h1>
-            <p className="text-gray-400 text-sm mb-6">This invoice doesn't exist or was removed.</p>
+            <p className="text-gray-400 text-sm mb-6">This invoice doesn&apos;t exist or was removed.</p>
             <Link href="/" className="btn-primary text-sm py-2.5 inline-block">Back to Home</Link>
           </div>
         </div>

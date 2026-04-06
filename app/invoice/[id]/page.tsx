@@ -72,7 +72,7 @@ export default function InvoicePage() {
               </svg>
             </div>
             <h1 className="text-2xl font-bold mb-2 text-text">Invoice Not Found</h1>
-            <p className="text-gray-400 text-sm mb-6">The invoice you're looking for doesn't exist or was removed.</p>
+            <p className="text-gray-400 text-sm mb-6">The invoice you&apos;re looking for doesn&apos;t exist or was removed.</p>
             <Link href="/" className="btn-primary text-sm py-2.5 inline-block">Back to Home</Link>
           </div>
         </div>
